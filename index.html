@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+body
+{
+	margin:0;
+}
+.nav_button
+{
+	height:2fr;
+	color:white;
+	line-height:2fr;
+	padding:5px;
+	display:inline-block;
+	text-align:center;
+	background-color:red;
+	cursor:pointer;
+}
+#navbar
+{
+	height:2fr;
+	width:100%;
+	color:white;
+	display:inline-block;
+	background-color:black;
+	cursor:default;
+
+}
+</style>
+<script>
+function type2(e){
+	var val=e.target.func_param;
+	console.log(val);
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function(){
+		if (this.readyState == 4 && this.status == 200) {
+			console.log(this.responseText);
+		}
+	};
+	//xhttp.open("POST", val, true);
+	xhttp.open("POST", "Test", true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send(val);
+	//xhttp.send();
+}
+
+</script>
+</head>
+<body>
+<intelligent-navbar labelsnbuttons='{"logo":"XYZ Website","button_1":"Click_Me"}' id="in_1" buttonsncalls='{"logo":"ignore","button_1":"python_1"}' callsnmessage='{"logo":"ignore","button_1":"Hi, How are you ?"}'></intelligent-navbar>
+<script id="test">
+var lb_info=document.getElementById("in_1").getAttribute("labelsnbuttons");
+var bc_info=document.getElementById("in_1").getAttribute("buttonsncalls");
+var cm_info=document.getElementById("in_1").getAttribute("callsnmessage");
+var labelsnbuttons = JSON.parse(lb_info);
+var buttonsncalls = JSON.parse(bc_info);
+var callsnmessage = JSON.parse(cm_info);
+//console.log(labelsnbuttons.logo, labelsnbuttons.button1);
+var dce=document.createElement("navbar");
+	dce.id="navbar";
+	document.body.appendChild(dce);
+for(div_name in labelsnbuttons)
+{
+	var dce=document.createElement(div_name);
+	dce.className="nav_"+div_name.split("_")[0];
+	dce.textContent=labelsnbuttons[div_name];
+	if(buttonsncalls[div_name]!=="ignore")
+	{
+		dce.func_param='{"program":"'+buttonsncalls[div_name]+'","message":"'+callsnmessage[div_name]+'"}';
+		dce.addEventListener("click",type2,false);
+	}
+	document.getElementById("navbar").appendChild(dce);
+}
+var element = document.getElementById("in_1");
+element.parentNode.removeChild(element);
+var element = document.getElementById("test");
+element.parentNode.removeChild(element);
+</script>
+</body>
+</html>

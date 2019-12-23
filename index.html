@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="html" count="0">
 <head>
 <meta charset="utf-8">
 <style>
@@ -7,32 +7,75 @@ body
 {
 	margin:0;
 }
-.nav_button
+.nav_logo
 {
-	height:2fr;
+	height:4vh;
 	color:white;
-	line-height:2fr;
-	padding:5px;
+	line-height:4vh;
+	padding:1vh;
 	display:inline-block;
 	text-align:center;
-	background-color:red;
+}
+.nav_button
+{
+	height:4vh;
+	color:white;
+	line-height:4vh;
+	padding:1vh;
+	display:inline-block;
+	text-align:center;
+	background-color: #f8002f;
+	background-image: linear-gradient(326deg, #f8002f 0%, #000c14 74%);
 	cursor:pointer;
+	border-radius:2vh;
 }
 #navbar
 {
-	height:2fr;
-	width:100%;
+	width:100vw;
+	line-height:4vh;
 	color:white;
 	display:inline-block;
 	background-color:black;
+	user-select: none;
+	position:fixed;
 	cursor:default;
 
 }
+role
+{
+	height:4vh;
+	margin-top:.2vh;
+	width:12vw;
+	background-color:yellow;
+	display:block;
+	border-radius:2vh;
+	background-color: #7f5a83;
+	color:white;
+	font-weight:bold;
+	line-height:4vh;
+	text-align:center;
+	cursor:pointer;
+	background-image: linear-gradient(315deg, #7f5a83 0%, #0d324d 74%);
+}
+#holder_1
+{
+	top:8vh;
+	left:2vw;
+	user-select: none;
+	overflow-y: scroll;
+}
 </style>
 <script>
-function type2(e){
+//window.onload=function(event){alert("hi");};
+//window.onunload=function(event){alert("bye");};
+function type2(e)
+{
 	var val=e.target.func_param;
 	console.log(val);
+	if(JSON.parse(val)["program"]==="notepad")
+	{
+		this.textContent=JSON.parse(val)["message"];
+	}
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function(){
 		if (this.readyState == 4 && this.status == 200) {
@@ -45,11 +88,44 @@ function type2(e){
 	xhttp.send(val);
 	//xhttp.send();
 }
-
+function filename_get(e)
+{
+	var filename_1 = prompt("Enter Filename : ","");
+	this.func_param='{"program":"notepad","message":"'+filename_1+'"}';
+	console.log(this.func_param);
+	this.removeEventListener("click", filename_get,false);
+	this.textContent=filename_1;
+	this.addEventListener("click",type2,false);
+					
+}
+function type3(e)
+{
+	var val=e.target.func_param;
+	console.log(val);
+	var json_val = JSON.parse(val);
+	console.log(json_val["program"]);
+	console.log(json_val["message"]);
+	if(json_val["program"]==="command_step")
+	{
+		if(json_val["message"]==="add_new_role")
+		{
+			console.log(json_val["program"]);
+			var option_works=document.createElement("role");
+			var temp=document.getElementById("html");
+			var temp_1=temp.getAttribute("count");
+			option_works.id="role_"+(parseInt(temp_1)+1).toString();
+			option_works.innerHTML="<span style='color:#dddddd;'>noScript</span> &#43;";
+			option_works.addEventListener("click",filename_get,false);
+			document.getElementById("html").setAttribute("count",(parseInt(temp_1)+1).toString());
+			console.log(option_works.id);
+			document.getElementById("holder_1").appendChild(option_works);
+		}
+	}
+}
 </script>
 </head>
 <body>
-<intelligent-navbar labelsnbuttons='{"logo":"XYZ Website","button_1":"Click_Me"}' id="in_1" buttonsncalls='{"logo":"ignore","button_1":"python_1"}' callsnmessage='{"logo":"ignore","button_1":"Hi, How are you ?"}'></intelligent-navbar>
+<intelligent-navbar labelsnbuttons='{"logo":"XYZ Website","button_1":"Click_Me","button_2":"Add Command"}' id="in_1" buttonsncalls='{"logo":"ignore","button_1":"python_1","button_2":"command_step"}' callsnmessage='{"logo":"ignore","button_1":"Hi, How are you ?","button_2":"add_new_role"}'></intelligent-navbar>
 <script id="test">
 var lb_info=document.getElementById("in_1").getAttribute("labelsnbuttons");
 var bc_info=document.getElementById("in_1").getAttribute("buttonsncalls");
@@ -66,10 +142,15 @@ for(div_name in labelsnbuttons)
 	var dce=document.createElement(div_name);
 	dce.className="nav_"+div_name.split("_")[0];
 	dce.textContent=labelsnbuttons[div_name];
-	if(buttonsncalls[div_name]!=="ignore")
+	if(buttonsncalls[div_name]!=="ignore" && buttonsncalls[div_name]!=="command_step")
 	{
 		dce.func_param='{"program":"'+buttonsncalls[div_name]+'","message":"'+callsnmessage[div_name]+'"}';
 		dce.addEventListener("click",type2,false);
+	}
+	else if(buttonsncalls[div_name]==="command_step")
+	{
+		dce.func_param='{"program":"'+buttonsncalls[div_name]+'","message":"'+callsnmessage[div_name]+'"}';
+		dce.addEventListener("click",type3,false);
 	}
 	document.getElementById("navbar").appendChild(dce);
 }
@@ -77,6 +158,13 @@ var element = document.getElementById("in_1");
 element.parentNode.removeChild(element);
 var element = document.getElementById("test");
 element.parentNode.removeChild(element);
+var holders = document.createElement("holder");
+holders.id="holder_1";
+holders.style.height="70vh";
+holders.style.width="15vw";
+holders.style.display="block";
+holders.style.position="fixed";
+document.body.appendChild(holders);
 </script>
 </body>
 </html>

@@ -10,6 +10,7 @@ import socketserver
 
 import json
 import os
+import subprocess
 from http.server import BaseHTTPRequestHandler,HTTPServer
 
 class MyHandler(BaseHTTPRequestHandler):
@@ -50,6 +51,12 @@ class MyHandler(BaseHTTPRequestHandler):
 		json_output=json.loads(post_body.decode("utf-8"))
 		if(json_output["program"]=="python_1"):
 			os.system('python.exe python_program.py "'+json_output["message"]+'"')
+		elif(json_output["program"]=="notepad"):
+			if(os.path.isfile(".\\Programs\\"+json_output["message"]+".py")!= True):
+				f=open(".\\Programs\\"+json_output["message"]+".py","w+")
+				f.write("")
+				f.close()
+			subprocess.call('notepad \".\\Programs\\'+json_output["message"]+'.py\"',shell=True)
 		self.connection.shutdown(1) 
 
 PORT = 8668

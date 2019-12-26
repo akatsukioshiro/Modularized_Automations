@@ -37,7 +37,10 @@ class ThreadingMixIn:
 		In addition, exception handling is done here.
 		"""
 		try:
-			self.finish_request(request, client_address)
+			try:
+				self.finish_request(request, client_address)
+			except ValueError:
+				pass
 		except Exception:
 			self.handle_error(request, client_address)
 		finally:
@@ -109,11 +112,12 @@ class MyHandler(BaseHTTPRequestHandler):
 		content_len = int(self.headers.get('Content-Length'))
 		post_body = self.rfile.read(content_len)
 		print(post_body.decode("utf-8"))
+		json_output=""
 		json_output=json.loads(post_body.decode("utf-8"))
 		self.connection.close() #VERY IMPORTANT FOR THREAD COUNT
 		self.finish() #VERY IMPORTANT FOR THREAD COUNT
 		worker(json_output)
-		self.connection.shutdown(1) 
+		#self.connection.shutdown(1) #IS USEFUL AND NOT USEFUL AT THE SAME TIME, SINCE CONNECTION CLOSED, SHUTDOWN NOT NEEDED THROWS ERROR BUT NEEDED
 
 # PORT = 8668
 

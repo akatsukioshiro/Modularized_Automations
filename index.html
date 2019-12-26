@@ -41,7 +41,7 @@ body
 	cursor:default;
 
 }
-role
+role,main_role
 {
 	height:4vh;
 	margin-top:.2vh;
@@ -109,6 +109,18 @@ function type3(e)
 	{
 		if(json_val["message"]==="add_new_role")
 		{
+			if(document.getElementById("html").getAttribute("count")==="0")
+			{
+				console.log(json_val["program"]);
+				var main_works=document.createElement("main_role");
+				main_works.id="main_role_0";
+				main_works.innerHTML="<span style='color:#dddddd;'>main</span>";
+				main_works.func_param='{"program":"notepad","message":"main"}';
+				console.log(main_works.func_param);
+				main_works.addEventListener("click",type2,false);
+				console.log(main_works.id);
+				document.getElementById("holder_1").appendChild(main_works);
+			}
 			console.log(json_val["program"]);
 			var option_works=document.createElement("role");
 			var temp=document.getElementById("html");
